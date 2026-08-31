@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard - Gerenciador de Tarefas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'dashboard' %}">TarefasApp</a>
+            <div class="d-flex align-items-center">
+                <span class="navbar-text text-white me-3">Olá, {{ request.user.username }}</span>
+                <form action="{% url 'logout' %}" method="post" class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-light btn-sm">Sair</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Dashboard de Tarefas</h2>
+            <a href="{% url 'task_create' %}" class="btn btn-primary">+ Nova Tarefa</a>
+        </div>
+
+        <div class="mb-3">
+            <strong>Filtrar por status:</strong>
+            <a href="{% url 'dashboard' %}" class="btn btn-sm btn-outline-secondary {% if not current_status %}active{% endif %}">Todas</a>
+            <a href="{% url 'dashboard' %}?status=pendente" class="btn btn-sm btn-outline-warning {% if current_status == 'pendente' %}active{% endif %}">Pendente</a>
+            <a href="{% url 'dashboard' %}?status=em_andamento" class="btn btn-sm btn-outline-info {% if current_status == 'em_andamento' %}active{% endif %}">Em Andamento</a>
+            <a href="{% url 'dashboard' %}?status=concluida" class="btn btn-sm btn-outline-success {% if current_status == 'concluida' %}active{% endif %}">Concluída</a>
+        </div>
+
+        <div class="row">
+            {% for task in tasks %}
+            <div class="col-md-4 mb-3">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ task.title }}</h5>
+                        <p class="card-text text-muted">{{ task.description|default:"Sem descrição." }}</p>
+                        <p><strong>Status:</strong> <span class="badge bg-secondary">{{ task.get_status_display }}</span></p>
+                        <p><strong>Responsável:</strong> {{ task.user.username|default:"Não atribuído" }}</p>
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'task_edit' task.id %}" class="btn btn-sm btn-outline-primary">Editar</a>
+                            <a href="{% url 'task_delete' task.id %}" class="btn btn-sm btn-outline-danger">Excluir</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <p class="text-muted">Nenhuma tarefa encontrada.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
