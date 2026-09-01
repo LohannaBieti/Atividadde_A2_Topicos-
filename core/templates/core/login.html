@@ -15,6 +15,11 @@
                     {{ form.as_p }}
                     <button type="submit" class="btn btn-primary w-100">Entrar</button>
                 </form>
+                
+                <!-- Link adicionado para direcionar à página de cadastro -->
+                <div class="text-center mt-3">
+                    <p class="mb-0">Ainda não tem conta? <a href="{% url 'register' %}">Cadastre-se</a></p>
+                </div>
             </div>
         </div>
     </div>

@@ -3,14 +3,16 @@ from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import get_object_or_404, redirect, render
 from .forms import TaskForm
 from .models import Task
+from django.contrib.auth import login
 
 
 def register(request):
   if request.method == 'POST':
     form = UserCreationForm(request.POST)
     if form.is_valid():
-      form.save()
-      return redirect('login')
+      user = form.save()
+      login(request, user)
+      return redirect('dashboard')
   else:
     form = UserCreationForm()
   return render(request, 'core/register.html', {'form': form})
