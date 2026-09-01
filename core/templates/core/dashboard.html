@@ -25,12 +25,13 @@
             <a href="{% url 'task_create' %}" class="btn btn-primary">+ Nova Tarefa</a>
         </div>
 
+        <!-- Filtros ajustados com os valores exatos do modelo ('pending', 'in_progress', 'done') -->
         <div class="mb-3">
             <strong>Filtrar por status:</strong>
             <a href="{% url 'dashboard' %}" class="btn btn-sm btn-outline-secondary {% if not current_status %}active{% endif %}">Todas</a>
-            <a href="{% url 'dashboard' %}?status=pendente" class="btn btn-sm btn-outline-warning {% if current_status == 'pendente' %}active{% endif %}">Pendente</a>
-            <a href="{% url 'dashboard' %}?status=em_andamento" class="btn btn-sm btn-outline-info {% if current_status == 'em_andamento' %}active{% endif %}">Em Andamento</a>
-            <a href="{% url 'dashboard' %}?status=concluida" class="btn btn-sm btn-outline-success {% if current_status == 'concluida' %}active{% endif %}">Concluída</a>
+            <a href="{% url 'dashboard' %}?status=pending" class="btn btn-sm btn-outline-warning {% if current_status == 'pending' %}active{% endif %}">Pendente</a>
+            <a href="{% url 'dashboard' %}?status=in_progress" class="btn btn-sm btn-outline-info {% if current_status == 'in_progress' %}active{% endif %}">Em Andamento</a>
+            <a href="{% url 'dashboard' %}?status=done" class="btn btn-sm btn-outline-success {% if current_status == 'done' %}active{% endif %}">Concluída</a>
         </div>
 
         <div class="row">
@@ -40,11 +41,23 @@
                     <div class="card-body">
                         <h5 class="card-title">{{ task.title }}</h5>
                         <p class="card-text text-muted">{{ task.description|default:"Sem descrição." }}</p>
-                        <p><strong>Status:</strong> <span class="badge bg-secondary">{{ task.get_status_display }}</span></p>
+                        
+                        <!-- Badge formatada com a cor correspondente ao status -->
+                        <p>
+                            <strong>Status:</strong> 
+                            <span class="badge 
+                                {% if task.status == 'pending' %}bg-warning text-dark
+                                {% elif task.status == 'in_progress' %}bg-info text-dark
+                                {% elif task.status == 'done' %}bg-success{% endif %}">
+                                {{ task.get_status_display }}
+                            </span>
+                        </p>
+                        
                         <p><strong>Responsável:</strong> {{ task.user.username|default:"Não atribuído" }}</p>
+                        
                         <div class="d-flex justify-content-between">
-                            <a href="{% url 'task_edit' task.id %}" class="btn btn-sm btn-outline-primary">Editar</a>
-                            <a href="{% url 'task_delete' task.id %}" class="btn btn-sm btn-outline-danger">Excluir</a>
+                            <a href="{% url 'task_edit' task.pk %}" class="btn btn-sm btn-outline-primary">Editar</a>
+                            <a href="{% url 'task_delete' task.pk %}" class="btn btn-sm btn-outline-danger">Excluir</a>
                         </div>
                     </div>
                 </div>
