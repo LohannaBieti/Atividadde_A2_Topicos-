@@ -15,6 +15,8 @@ def register(request):
       return redirect('dashboard')
   else:
     form = UserCreationForm()
+    for field in form.fields.values():
+        field.help_text = None
   return render(request, 'core/register.html', {'form': form})
 
 
